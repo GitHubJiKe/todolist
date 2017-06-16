@@ -1,17 +1,19 @@
-const ADD_TODO = 'ADD_TODO';
-const REMOVE_TODO = 'REMOVE_TODO';
-const CHANGE_TODO_STATUS = 'CHANGE_TODO_STATUS';
-const CHANGE_SHOW_TYPE = 'CHANGE_SHOW_TYPE';
-const REMOVEALL_BY_TYPE = 'REMOVEALL_BY_TYPE';
-const status = ['undo','finished'];
+import {
+  ADD_TODO,
+  REMOVE_TODO,
+  CHANGE_TODO_STATUS,
+  CHANGE_SHOW_TYPE,
+  REMOVEALL_BY_TYPE,
+  status
+} from '../constants/actionName'
 
 
 
 export const addTodoItem = (todoItem) => {
   return function (dispatch) {
     dispatch({
-        type:ADD_TODO,
-        todoItem:todoItem
+      type: ADD_TODO,
+      todoItem: todoItem
     });
   }
 }
@@ -19,36 +21,36 @@ export const addTodoItem = (todoItem) => {
 export const removeTodoItem = (id) => {
   return function (dispatch) {
     dispatch({
-        type:REMOVE_TODO,
-        id:id
+      type: REMOVE_TODO,
+      id: id
     });
   }
 }
 
-export const chanegTodoStatus = (id,status)=>{
-    return function (dispatch) {
+export const chanegTodoStatus = (id, status) => {
+  return function (dispatch) {
     dispatch({
-        type:CHANGE_TODO_STATUS,
-        id:id,
-        status:status
+      type: CHANGE_TODO_STATUS,
+      id: id,
+      status: status
     });
   }
 }
 
-export const chanegShowType = (type)=>{
-    return function (dispatch) {
+export const chanegShowType = (type) => {
+  return function (dispatch) {
     dispatch({
-        type:CHANGE_SHOW_TYPE,
-        showing:type
+      type: CHANGE_SHOW_TYPE,
+      showing: type
     });
   }
 }
 
-export const removeAllByType = (type)=>{
-    return function (dispatch) {
+export const removeAllByType = (type) => {
+  return function (dispatch) {
     dispatch({
-        type:REMOVEALL_BY_TYPE,
-        removeType:type
+      type: REMOVEALL_BY_TYPE,
+      removeType: type
     });
   }
 }

@@ -1,9 +1,12 @@
-const ADD_TODO = 'ADD_TODO';
-const REMOVE_TODO = 'REMOVE_TODO';
-const CHANGE_TODO_STATUS = 'CHANGE_TODO_STATUS';
-const CHANGE_SHOW_TYPE = 'CHANGE_SHOW_TYPE';
-const REMOVEALL_BY_TYPE = 'REMOVEALL_BY_TYPE';
-const status = ['undo', 'finished'];
+import {
+    ADD_TODO,
+    REMOVE_TODO,
+    CHANGE_TODO_STATUS,
+    CHANGE_SHOW_TYPE,
+    REMOVEALL_BY_TYPE,
+    status
+} from '../constants/actionName'
+
 const initState = {
     undoList: [],
     finishedList: [],
@@ -42,7 +45,7 @@ export default function todos(state = initState, action) {
             state.showing = action.showing;
             return { ...state };
         case REMOVEALL_BY_TYPE:
-            if(action.removeType === status[0]) state.undoList = [];
+            if (action.removeType === status[0]) state.undoList = [];
             else state.finishedList = [];
             return { ...state };
         default:

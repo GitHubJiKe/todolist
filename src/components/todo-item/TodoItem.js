@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux';
 import * as todosAction from '../../actions/todos'
-const status = ['undo', 'finished'];
+import { status } from '../../constants/actionName'
 
 class TodoItem extends Component {
 
@@ -76,7 +76,7 @@ class TodoItem extends Component {
 
     render() {
         return (<div>
-            <div style={{display:'inline-block',marginRight:20}}>
+            <div style={{ display: 'inline-block', marginRight: 20 }}>
                 <input
                     style={{ display: 'block' }}
                     type="button"
