@@ -2,76 +2,50 @@ const ADD_TODO = 'ADD_TODO';
 const REMOVE_TODO = 'REMOVE_TODO';
 const CHANGE_TODO_STATUS = 'CHANGE_TODO_STATUS';
 const CHANGE_SHOW_TYPE = 'CHANGE_SHOW_TYPE';
-const status = ['undo','finished'];
+const REMOVEALL_BY_TYPE = 'REMOVEALL_BY_TYPE';
+const status = ['undo', 'finished'];
 const initState = {
-    todolist:[],
-    undoList:[],
-    finishedList:[],
-    showing:status[0]
+    undoList: [],
+    finishedList: [],
+    showing: status[0]
 };
-const todoState = {id:'',context:'',status:''};
+const todoState = { id: '', context: '', status: '' };
 
-export  default function todos(state = initState, action) {
+export default function todos(state = initState, action) {
     switch (action.type) {
         case ADD_TODO:
-        state.todolist.push(action.todoItem);
-        state.todolist.forEach(v=>{
-            if(v.status === status[0]) if(!state.undoList.includes(v)) state.undoList.push(v);
-            if(v.status === status[1]) if(!state.finishedList.includes(v)) state.finishedList.push(v);
-        })
-        return {...state};
+            state.undoList.push(action.todoItem);
+            return { ...state };
         case REMOVE_TODO:
-        state.todolist = state.todolist.filter((v=>{
-            return v.id != action.id;
-        }));
-        var newUndo = [];
-        var newFinished = [];
-        state.todolist.forEach(v=>{
-            if(v.status === status[0]) if(!newUndo.includes(v)) newUndo.push(v);
-            if(v.status === status[1]) if(!newFinished.includes(v)) newFinished.push(v);
-        })
-        return {...state,undoList:newUndo,finishedList:newFinished,showing:state.showing};
+            var index1 = state.undoList.findIndex(v => { return v.id === action.id; });
+            var index2 = state.finishedList.findIndex(v => { return v.id === action.id; });
+            if (index1 > -1) state.undoList.splice(index1, 1);
+            if (index2 > -1) state.finishedList.splice(index1, 1);
+            return { ...state };
         case CHANGE_TODO_STATUS:
-        state.todolist.forEach(v=>{
-            if(v.id == action.id){
-                v.status = action.status;
+            var index1 = state.undoList.findIndex(v => { return v.id === action.id })
+            var index2 = state.finishedList.findIndex(v => { return v.id === action.id })
+            if (index1 > -1) {
+                var toPush = state.undoList[index1];
+                toPush.status = action.status;
+                state.finishedList.push(toPush);
+                state.undoList.splice(index1, 1);
             }
-            if(v.status === status[0]) {
-                if(!state.undoList.includes(v)) {
-                    state.undoList.push(v);
-                    if(state.finishedList.includes(v)){
-                        //delete
-                        state.finishedList = state.finishedList.filter(vv=>{
-                            return v.id != vv.id;
-                        });
-                    }
-                }
+            if (index2 > -1) {
+                var toPush = state.finishedList[index2];
+                toPush.status = action.status;
+                state.undoList.push(toPush);
+                state.finishedList.splice(index2, 1);
             }
-            if(v.status === status[1]) {
-                if(!state.finishedList.includes(v)){
-                     state.finishedList.push(v);
-                     if(state.undoList.includes(v)){
-                         //delete
-                         state.undoList = state.undoList.filter(vv=>{
-                             return v.id != vv.id;
-                         });
-                     }
-                }
-            }
-        })
-        state.todolist.forEach(v=>{
-            if(v.status === status[0]) if(!state.undoList.includes(v)) state.undoList.push(v);
-            if(v.status === status[1]) if(!state.finishedList.includes(v)) state.finishedList.push(v);
-        })
-        return {...state};
+            return { ...state };
         case CHANGE_SHOW_TYPE:
-        state.showing = action.showing;
-        state.todolist.forEach(v=>{
-            if(v.status === status[0]) if(!state.undoList.includes(v)) state.undoList.push(v);
-            if(v.status === status[1]) if(!state.finishedList.includes(v)) state.finishedList.push(v);
-        })
-        return {...state};
+            state.showing = action.showing;
+            return { ...state };
+        case REMOVEALL_BY_TYPE:
+            if(action.removeType === status[0]) state.undoList = [];
+            else state.finishedList = [];
+            return { ...state };
         default:
-        return {...state};
+            return { ...state };
     }
 }

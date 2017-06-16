@@ -8,23 +8,17 @@ class TodoItem extends Component {
 
     constructor(props, context) {
         super(props, context);
-        this.state = { content: '', todolist: props.todoState.todolist };
+        this.state = { content: '' };
         this._handleKeyPress = this._handleKeyPress.bind(this);
         this._handleChange = this._handleChange.bind(this);
-        this._getItemsView = this._getItemsView.bind(this);
+        this._getItemsViewByType = this._getItemsViewByType.bind(this);
         this._handTypeChange = this._handTypeChange.bind(this);
     }
 
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.todoState.showing === status[0]) {
-            this.state.todolist = nextProps.todoState.undoList;
-        } else {
-            this.state.todolist = nextProps.todoState.finishedList;
-        }
-        this.setState({});
-    }
-
-    _getItemsView(todolist) {
+    _getItemsViewByType(showing) {
+        var todolist = [];
+        if (showing === status[0]) todolist = this.props.todoState.undoList;
+        else todolist = this.props.todoState.finishedList;
         return todolist.map((item) => {
             let color = item.status === 'undo' ? 'red' : 'green';
             let value = item.status === 'undo' ? 'finish' : 'undo';
@@ -56,13 +50,15 @@ class TodoItem extends Component {
             todoItem.id = this._getNextId();
             todoItem.status = status[0];
             this.props.actions.addTodoItem(todoItem);
-            this.setState({content:''});
+            this.setState({ content: '' });
         }
     }
 
     _getNextId() {
         var max = 0;
-        this.props.todoState.todolist.forEach(v => {
+        var { undoList, finishedList } = this.props.todoState;
+        var todolist = undoList.concat(finishedList);
+        todolist.forEach(v => {
             if (v.id > max) max = v.id;
         });
         return max + 1;
@@ -80,18 +76,40 @@ class TodoItem extends Component {
 
     render() {
         return (<div>
-            <input style={{ display: 'inline-block', marginRight: 30 }} type="button" value="Check Finished" onClick={() => this._handTypeChange(status[1])} />
+            <div style={{display:'inline-block',marginRight:20}}>
+                <input
+                    style={{ display: 'block' }}
+                    type="button"
+                    value="Remove All Finished"
+                    onClick={() => this.props.actions.removeAllByType(status[1])} />
+                <input
+                    style={{ display: 'block' }}
+                    type="button"
+                    value="Check Finished"
+                    onClick={() => this._handTypeChange(status[1])} />
+                <input
+                    style={{ display: 'block' }}
+                    type="button"
+                    value="Check UnDo"
+                    onClick={() => this._handTypeChange(status[0])} />
+                <input
+                    style={{ display: 'block' }}
+                    type="button"
+                    value="Remove All UnDo"
+                    onClick={() => this.props.actions.removeAllByType(status[0])} />
+            </div>
+
             <textarea
                 id="inputDom"
-                rows="5"
+                rows="4"
                 cols="80"
                 placeholder="input your target..."
                 value={this.state.content}
                 onChange={this._handleChange}
                 onKeyPress={this._handleKeyPress} />
-            <input style={{ display: 'inline-block', marginLeft: 30 }} type="button" value="Check UnDo" onClick={() => this._handTypeChange(status[0])} />
+
             <br />
-            {this._getItemsView(this.state.todolist)}
+            {this._getItemsViewByType(this.props.todoState.showing)}
         </div>);
     }
 }

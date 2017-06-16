@@ -2,6 +2,7 @@ const ADD_TODO = 'ADD_TODO';
 const REMOVE_TODO = 'REMOVE_TODO';
 const CHANGE_TODO_STATUS = 'CHANGE_TODO_STATUS';
 const CHANGE_SHOW_TYPE = 'CHANGE_SHOW_TYPE';
+const REMOVEALL_BY_TYPE = 'REMOVEALL_BY_TYPE';
 const status = ['undo','finished'];
 
 
@@ -39,6 +40,15 @@ export const chanegShowType = (type)=>{
     dispatch({
         type:CHANGE_SHOW_TYPE,
         showing:type
+    });
+  }
+}
+
+export const removeAllByType = (type)=>{
+    return function (dispatch) {
+    dispatch({
+        type:REMOVEALL_BY_TYPE,
+        removeType:type
     });
   }
 }
